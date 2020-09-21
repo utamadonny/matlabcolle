@@ -1,0 +1,20 @@
+%Fungsi FFT dan IFFT
+x = [1 2 3 4];
+h = [1 3 2 1];
+y = conv(x,h);
+n1 = 0:length(x)-1;
+n2 = 0:2*length(x)-2;
+subplot(221), plot(n1,x,'-o');
+title('x(n)'), grid;
+subplot(222), plot(n1,h,'-o');
+title('h(n)'), grid;
+subplot(223), plot(n2,y,'r-o'), grid;
+title('Konvolusi x(n) & h(n) dg. fungsi internal');
+N = 7;
+n3 = 0:N-1;
+X = fft(x,N);
+H = fft(h,N);
+Y = X .* H;
+y1 = ifft(Y,N);
+subplot(224), plot(n3,real(y1),'r-o'), grid;
+title('Konvolusi x(n) & h(n) melalui FFT & IFFT');
