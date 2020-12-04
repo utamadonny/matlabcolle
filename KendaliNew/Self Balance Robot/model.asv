@@ -106,13 +106,13 @@ ylabel('Singular values')
 title('Singular value plot of the uncertain model')
 legend('Nominal system','Random samples')
 
-%% Test Weight
-w=logspace(-1,1,100);
-bodemag(G_unc1,w) 
-grid
+%% Performance Weighting Func
+% w=logspace(-1,1,100);
+% bode(G_unc1,w) 
+% grid
 % step(G_unc1)
 % grid
-%% Performance Weighting Func
+%
 % *Teori Performance Weighting*
 %
 % $Wp = diag(Wp11,Wp22,Wp33,Wp44,Wp55)$
@@ -160,32 +160,21 @@ grid
 title('Inverse performance weighting functions')
 legend('W_{p11}^{-1}','W_{p44}^{-1}','W_{p55}^{-1}')
 %
-%% Noise shaping filters
-%
-% $Wn = diag(Wn11,Wn22)$
-%
-% $Wu_{11}=0.1 \frac{1.0s+2}{0.01s+1}$
-% 
-% $Wu_{22}=1.0 \frac{1.0s+2}{0.01s+1}$
+% Noise shaping filters
 Wn11 = 0.1*tf([1 2], [0.001 1]);  % 
 Wn22 = 1.0*tf([1 2], [0.001 1]);  % 
 %-------------------------------------
 Wn = [Wn11  0
        0   Wn22];
-% Sensor Noise
+%% Sensor Noise
+
 figure(3)
 bodemag(Wn11,'r-',Wn22,'b--',{10^(-1) 10^4})
 grid
 title('Sensor noise weight')
 legend('Wn11','Wn22')
 %
-%% Control action weights
-% 
-% $Wu = diag(Wu11,Wu22)$
-% 
-% $Wu_{11}=0.02 \frac{1.2s+1}{0.0024s+1}$
-% 
-% $Wu_{22}=0.02 \frac{1.2s+1}{0.0024s+1}$
+% control action weights
 nuWu = [1.2    1];    % 
 dnWu = [0.0024  1];   % 
 gainWu = 2.0*10^(-2); %
@@ -193,6 +182,7 @@ Wu11 = gainWu*tf(nuWu,dnWu);
 %-------------------------------------
 Wu = [Wu11 0
        0 Wu11];
+%% Inverse control wn fnc
 figure(4)
 bodemag(1/Wu11,'r-',{10^(-1) 10^4})
 grid
@@ -201,7 +191,7 @@ title('Inverse control weighting functions')
 s = tf('s');
 Intg = 1/(s+10^(-6)); 
 %
-%% open-loop connection with the weighting functions 
+%% open-loop connection with the weighting functions
 % 2 dof controller
 %         
 systemnames    = ' G_unc1 Wn Wp Wu Intg ';
