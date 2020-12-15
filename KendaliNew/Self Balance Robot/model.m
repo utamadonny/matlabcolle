@@ -5,7 +5,7 @@
 % <<2.png>>
 %
 % <<3.png>>
-%% Parameter in Matlab
+%% *Parameter in Matlab*
 % <<4.png>>
 g = 9.81;						% gravitasi [m/sec^2]
 m = 0.03;						% wheel weight [kg]
@@ -31,7 +31,7 @@ Kb = 0.468;						% DC motor back EMF constant [Vsec/rad]
 Kt = 0.317;						% DC motor torque constant [Nm/A]
 n = 1;							% gear ratio
 
-%% State-Space Matrix Certain Model
+%% *State-Space Matrix Certain Model*
 alpha = n * Kt / Rm;
 beta = n * Kt * Kb / Rm + fm;
 tmp = beta + fw;
@@ -88,14 +88,14 @@ G_unc1 = ss(A1,B1,C1,D1);
 G_unc2 = ss(A2,B2,C2,D2);
 % get(G_unc1)
 % get(G_unc2)
-%% Check Observability and Controllability
+%% *Check Observability and Controllability*
 Ob1=obsv(A1,C1);
 Ct1=ctrb(A1,B1);
 Ob2=obsv(A2,C2);
 Ct2=ctrb(A2,B2);
 % rank(Ct);
 % rank(Ob)
-%% Singular Value Plot
+%% *Singular Value Plot*
 figure(1)
 % step(G_unc1.Nominal,'r-',G_unc1,'b--'), grid
 % bode(G_unc1.Nominal,'r-',G_unc1,'b--'), grid
@@ -106,13 +106,29 @@ ylabel('Singular values')
 title('Singular value plot of the uncertain model')
 legend('Nominal system','Random samples')
 
+%% Note DESAIN KONTROL
+% <<9.PNG>> 
+% Membuat desain kontrol untuk plant 1 sangat mudah karena diagram blok
+% sudah tersedia pada [1]. 
+% 
+%
 %% Test Weight
 w=logspace(-1,1,100);
+figure(1)
 bodemag(G_unc1,w) 
+grid
+figure(2)
+step(G_unc1) 
+grid
+figure(3)
+bodemag(G_unc2,w) 
+grid
+figure(4)
+step(G_unc2) 
 grid
 % step(G_unc1)
 % grid
-%% Performance Weighting Func
+%% *Performance Weighting Func*
 % *Teori Performance Weighting*
 %
 % $Wp = diag(Wp11,Wp22,Wp33,Wp44,Wp55)$
@@ -153,14 +169,18 @@ Wp = [Wp11 0    0   0   0;
       0   Wp22  0   0   0;
       0    0  Wp33  0   0;
       0    0    0  Wp44 0;
-      0    0    0   0  Wp55];
+      0    0    0   0  Wp55]; % Wp untun plant 1
+  
+Wp2 = [Wp11 0    0;
+      0   Wp44  0;
+      0    0  Wp55]; % Wp untun plant 2
 figure(2)
 bodemag(1/Wp11,'r-',1/Wp44,'b--',1/Wp55,'c-.',{10^(-3) 10^2})
 grid
 title('Inverse performance weighting functions')
 legend('W_{p11}^{-1}','W_{p44}^{-1}','W_{p55}^{-1}')
 %
-%% Noise shaping filters
+%% *Noise shaping filters*
 %
 % $Wn = diag(Wn11,Wn22)$
 %
@@ -179,7 +199,7 @@ grid
 title('Sensor noise weight')
 legend('Wn11','Wn22')
 %
-%% Control action weights
+%% *Control action weights*
 % 
 % $Wu = diag(Wu11,Wu22)$
 % 
@@ -199,12 +219,19 @@ bodemag(1/Wu11,'r-',{10^(-1) 10^4})
 grid
 title('Inverse control weighting functions')
 %
-s = tf('s');
-Intg = 1/(s+10^(-6)); 
 %
 %% open-loop connection with the weighting functions 
 % 2 dof controller
 % Plant 1
+%
+% <<6.PNG>>
+% 
+%
+% <<7.PNG>>
+% 
+s = tf('s');
+Intg = 1/(s+10^(-6)); 
+
 systemnames    = ' G_unc1 Wn Wp Wu Intg ';
 inputvar       = '[ ref{4}; noise{2}; control{2} ]';
 outputvar      = '[ Wp; Wu; ref; -G_unc1(1:2); -G_unc1(3:4)-Wn; Intg ]';
@@ -217,85 +244,302 @@ sys_ic         = sysic;
 %
 C_hh = [1 0];
 
-% Plant 2 ???
-% systemnames    = ' G_unc2 Wn Wp Wu Intg ';
-% inputvar       = '[ ref{4}; noise{2}; control{2} ]';
-% outputvar      = '[ Wp; Wu; ref; -G_unc2(1:2); -G_unc2(3:4)-Wn; Intg ]';
-% input_to_G_unc = '[ control ]';
-% input_to_Wn    = '[ noise ]';
-% input_to_Wp    = '[ ref(1:4)-G_unc2(1:4); Intg ]';  
-% input_to_Wu    = '[ control ]';
-% input_to_Intg  = '[ ref(1)-G_unc2(1) ]';
-% sys_ic2         = sysic;
-
-%% Plot Controller $\mu$-Synthesis and $\mu$-Analysis
+systemnames = 'G_unc2 Wn Wp2 Wu Intg';
+inputvar = '[ ref{4}; noise{2}; control{2} ]';
+outputvar = '[Wp2; Wu; ref; -G_unc2; -G_unc2(2)-Wn(1); Intg ]';
+input_to_G_unc2 = '[ control ]';
+input_to_Wp2 = '[ref(1:2)-G_unc2(1:2); Intg]';
+input_to_Wn    = '[ noise ]';
+input_to_Wu = '[ control ]';
+input_to_Intg  = '[ ref(1)-G_unc2(1) ]';
+sys_ic2 = sysic;
+%
+X_hh = [1 0];
+%% Generates the open-loop connection for the Two-Wheeled Robot Control Plant 1
+% System simulation 
+%
+%
+s = tf('s');
+Intg1 = 1/(s+10^(-5)); 
+%
+systemnames    = ' G_unc1 Intg1 Wn ';
+inputvar       = '[ ref{4}; noise{2}; control{2} ]';
+outputvar      = '[ G_unc1; control; ref; -G_unc1(1:2); -G_unc1(3:4)-Wn; Intg1 ]';
+input_to_G_unc = '[ control ]';
+input_to_Wn    = '[ noise ]';
+input_to_Intg1 = '[ ref(1)-G_unc1(1) ]';
+sim_ic         = sysic;
+%% Frequency responses of the Two-Wheeled Robot Control System (Part 1)
+%
+% declare closed-loop interconnection
+%
+s = tf('s');
+Intg2 = 1/(s+10^(-5));
+%Intg2 = 1/s;
+%
+systemnames      = ' sim_ic Intg2 ';
+inputvar         = '[ ref{4}; noise{2}; control{2} ]';
+outputvar        = '[ sim_ic(1:6); ref(1:4)-sim_ic(1:4); Intg2; sim_ic(7:15) ]';
+input_to_sim_ic  = '[ ref; noise; control ]';
+input_to_Intg2    = '[ ref(1)- sim_ic(1) ]';
+clp_ic           = sysic;
+%% * $\mu$-Synthesis and $\mu$-Analysis*
+% <<8.PNG>>
+% 
+% Untuk merancang $\mu$-synthesis. The matrix P is the transfer function matrix of the extended
+% open-loop system shown in Fig 19.5
 % *closed-loop connection for the discrete-time system*
 Ts = 4.0*10^(-3);
-[Mat,Delta,blkstruct] = lftdata(sys_ic);
+omega = logspace(-3,log10(pi/Ts),200);
+
+[Mat,Delta,blkstruct] = lftdata(sys_ic); %plant 1
 M_d = c2d(Mat,Ts);
 dsys_ic = lft(Delta,M_d);
+
+[Mat2,Delta2,blkstruct2] = lftdata(sys_ic2); %plant 2
+M_d2 = c2d(Mat2,Ts);
+dsys_ic2 = lft(Delta2,M_d2);
+
 
 % *Tune Mu-Synthesis*
 nmeas = 9;
 ncont = 2;
+nmeas2 = 4;
+ncont2 = 2;
 fv = linspace(0,pi/Ts,200);
+
 %% Opsi 1 $\mu$-Synthesis dengan musyn
+%Plant 1
+
 opts = musynOptions('MixedMU','on','FullDG',false,...
               'Display','short', ...
               'MaxIter',5)
 [K,CLperf,info] = musyn(dsys_ic,nmeas,ncont,opts);
+Ts = 4.0*10^(-3);
+omega = logspace(-3,log10(pi/Ts),200);
 CL = lft(dsys_ic,K);
 wcg = wcgain(CL)
 figure(1)
-omega = logspace(-3,log10(pi/Ts),200);
 clf
 sigma(CL,'r-',omega), grid
+axis([10^(-3) 10^1 -10 10])
+title('Full cost')
+%
+%Plant 2
+% Gambar ?
+opts2 = musynOptions('MixedMU','on','FullDG',false,...
+              'Display','short', ...
+              'MaxIter',8)
+[K2,CLperf2,info2] = musyn(dsys_ic2,nmeas2,ncont2,opts2);
+Ts = 4.0*10^(-3);
+omega = logspace(-3,log10(pi/Ts),200);
+CL2 = lft(dsys_ic2,K2);
+wcg2 = wcgain(CL2)
+figure(2)
+clf
+sigma(CL2,'r-',omega), grid
+axis([10^(-3) 10^1 -10 10])
 title('Full cost')
 %% Opsi 2 $\mu$-Synthesis dengan dksyn
+%plant 1
+figure(1)
 opt = dkitopt('FrequencyVector',fv, ...
               'DisplayWhileAutoIter','on', ...
               'NumberOfAutoIterations',5)
 [Kd,dclp] = dksyn(dsys_ic,nmeas,ncont,opt);
+Ts = 4.0*10^(-3);
 omega = logspace(-3,log10(pi/Ts),200);
-figure(1)
 clf
 sigma(dclp,'r-',omega), grid
+axis([10^(-3) 10^1 -10 10])
 title('Full cost')
 [A_h,B_h,C_h,D_h] = ssdata(Kd);
 
-%% Mu analysis of the Two-Wheeled Robot Control System
+% plant 2
+figure(2)
+opt2 = dkitopt('FrequencyVector',fv, ...
+              'DisplayWhileAutoIter','on', ...
+              'NumberOfAutoIterations',5)
+[Kd2,dclp2] = dksyn(dsys_ic2,nmeas2,ncont2,opt2);
+Ts = 4.0*10^(-3);
+omega = logspace(-3,log10(pi/Ts),200);
+clf
+sigma(dclp2,'r-',omega), grid
+axis([10^(-3) 10^1 -10 10])
+title('Full cost')
+[A_h2,B_h2,C_h2,D_h2] = ssdata(Kd2);
+
+%% Frequency responses of the Two-Wheeled Robot Control System (Part 2)
+Ts = 4.0*10^(-3);
+% buat LFT
+[M3,Delta3,blkstruct3] = lftdata(clp_ic);
+M_d3 = c2d(M3,Ts);
+% close loop
+dclp_ic3 = lft(Delta3,M_d3);
+clp = lft(dclp_ic3,Kd);
+%
+dWp = c2d(Wp,Ts);
+dWn = c2d(Wn,Ts);
+dWu = c2d(Wu,Ts);
+%
+% closed-loop frequency response
+ref_loop = clp(1,1);
+omega = logspace(-3,log10(pi/Ts),500);
+figure(1)
+sigma(ref_loop,'r-',omega), grid
+xlabel('Frequency (rad/sec')
+ylabel('Singular values (dB)')
+axis([10^(-3) 10^1 -10 10])
+title('Singular value plot of the closed-loop system \Theta(z)/r(z)')
+%
+% singular values of the output sensitivity function
+sen_loop = clp(7,1);
+omega = logspace(-4,log10(pi/Ts),500);
+figure(2)
+sigma(sen_loop,'b-',inv(dWp(1,1)),'r--',omega), grid
+xlabel('Frequency (rad/sec')
+ylabel('Singular values (dB)')
+title('Singular value plot of the output sensitivity e_\Theta(z)/r(z)')
+legend('Output sensitivity','Inverse performance weighting function')
+%
+% singular values of the integral component
+sen_loop = clp(11,1);
+omega = logspace(-4,log10(pi/Ts),500);
+figure(3)
+sigma(sen_loop,'b-',inv(dWp(5,5)),'r--',omega), grid
+title('Singular value plot of the integral error Int(e_\Theta)(z)/r(z)')
+legend('Integral error','Inverse performance weighting function')
+%
+% sensitivity of control action to reference
+cont_loop = clp([5:6],[1:4]);
+omega = logspace(-4,log10(pi/Ts),500);
+figure(4)
+sigma(cont_loop,'b-',inv(dWu),'r--',omega), grid
+axis([10^(-4) pi/Ts -150 100])
+title('Sensitivity of control to references')
+legend('Control action','Inverse control weighting function')
+%
+% sensitivity of control action to noises
+cont_loop = clp([5:6],[5:6]);
+omega = logspace(-4,log10(pi/Ts),500);
+figure(5)
+sigma(cont_loop,'b-',inv(dWu),'r--',omega), grid
+axis([10^(-4) pi/Ts -300 100])
+title('Sensitivity of control to noises')
+legend('Control action due to noises', ...
+       'Inverse control weighting function')
+%
+% sensitivity of control action to reference and noise
+cont_loop = clp([5:6],[1:6]);
+omega = logspace(-4,log10(pi/Ts),500);
+figure(6)
+sigma(cont_loop,'b-',inv(dWu),'r--',omega), grid
+axis([10^(-4) pi/Ts -150 100])
+title('Sensitivity of control to references and noises')
+legend('Control action due to references and noises', ...
+       'Inverse control weighting function')
+%
+% controller frequency responses
+omega = logspace(-4,log10(pi/Ts),500);
+figure(7)
+sigma(Kd,'r-',omega), grid
+%bode(Kd,'r-',omega), grid
+axis([10^(-4) pi/Ts -50 100])
+title('Singular value plot of the controller')
+%title('Bode value plot of the controller')
+%
+% open-loop frequency response
+Ts = 4.0*10^(-3);
+[M,Delta,blkstruct] = lftdata(G_unc1);
+M_d = c2d(M,Ts);
+Gunc_d = lft(Delta,M_d);
+L = Gunc_d*Kd;
+omega = logspace(-5,log10(pi/Ts),500);
+figure(8)
+sigma(L,'r-',omega), grid
+axis([10^(-5) pi/Ts -50 150])
+title('Singular value plot of the open-loop system')
+
+%% *Mu analysis of the Two-Wheeled Robot Control System*
 % *closed-loop system*
+%
+%<<5.PNG>>
+%
+% Plant 1
+Ts = 4.0*10^(-3);
+omega = logspace(-3,log10(pi/Ts),200);
 dclp_ic = lft(dsys_ic,Kd,2,9);
-% omega = logspace(-3,log10(pi/Ts),200);
 dclp_g = ufrd(dclp_ic,omega);
-% 
-% *robust stability analysis*
+% Plant 2
+dclp_ic2 = lft(dsys_ic2,Kd2,2,4);
+dclp_g2 = ufrd(dclp_ic2,omega);
+%% robust stability analysis
+%Plant 1
+figure(1)
 opt = robopt('Display','on');
 [stabmarg,destabu,report,info] = robuststab(dclp_g,opt);
 report
-figure(1)
 semilogx(info.MussvBnds(1,1),'r-',info.MussvBnds(1,2),'b--')
 grid
 title('Robust stability')
 xlabel('Frequency (rad/sec)')
 ylabel('mu')
 legend('\mu-upper bound','\mu-lower bound')
-%
-% *nominal performance*
+
+%Plant 2
 figure(2)
+opt2 = robopt('Display','on');
+[stabmarg2,destabu2,report2,info2] = robuststab(dclp_g2,opt2);
+report2
+semilogx(info2.MussvBnds(1,1),'r-',info2.MussvBnds(1,2),'b--')
+grid
+title('Robust stability')
+xlabel('Frequency (rad/sec)')
+ylabel('mu')
+legend('\mu-upper bound','\mu-lower bound')
+
+%% nominal performance
+% Plant 1
+Ts = 4.0*10^(-3);
+omega = logspace(-3,log10(pi/Ts),200);
+figure(1)
 sv = sigma(dclp_ic.Nominal,omega);
 sys = frd(sv(1,:),omega);
 semilogx(sys,'r-')
 grid
 xlabel('Frequency (rad/sec)')
 title('Nominal performance')
-%
-% *robust performance*
+
+%Plant 2
+Ts = 4.0*10^(-3);
+omega = logspace(-3,log10(pi/Ts),200);
+figure(2)
+sv2 = sigma(dclp_ic2.Nominal,omega);
+sys2 = frd(sv2(1,:),omega);
+semilogx(sys2,'r-')
+grid
+xlabel('Frequency (rad/sec)')
+title('Nominal performance')
+
+%% robust performance Plant 1
+% plant 1
+figure(1)
 opt = robopt('Display','on');
 [perfmarg,perfmargunc,report,info] = robustperf(dclp_g,opt);
 report
-figure(3)
 semilogx(info.MussvBnds(1,1),'r-',info.MussvBnds(1,2),'b--')
+grid
+xlabel('Frequency (rad/sec)')
+ylabel('mu')
+title('Robust performance')
+legend('\mu-upper bound','\mu-lower bound')
+
+% plant 2
+figure(2)
+opt2 = robopt('Display','on');
+[perfmarg2,perfmargunc2,report2,info2] = robustperf(dclp_g2,opt2);
+report2
+semilogx(info2.MussvBnds(1,1),'r-',info2.MussvBnds(1,2),'b--')
 grid
 xlabel('Frequency (rad/sec)')
 ylabel('mu')
