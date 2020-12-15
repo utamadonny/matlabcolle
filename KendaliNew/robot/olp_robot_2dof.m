@@ -9,7 +9,7 @@ axis([10^(-1) 3*10^2 -5 25])
 xlabel('Frequency')
 ylabel('Singular values')
 title('Singular value plot of the uncertain model')
-legend('Nominal system','Random samples',1)
+legend('Nominal system','Random samples')
 %
 % performance weights
 %---------------------
@@ -49,7 +49,7 @@ figure(2)
 bodemag(1/Wp11,'r-',1/Wp44,'b--',1/Wp55,'c-.',{10^(-3) 10^2})
 grid
 title('Inverse performance weighting functions')
-legend('W_{p11}^{-1}','W_{p44}^{-1}','W_{p55}^{-1}',4)
+legend('W_{p11}^{-1}','W_{p44}^{-1}','W_{p55}^{-1}')
 %
 % Noise shaping filters
 Wn11 = 0.1*tf([1 2], [0.001 1]);  % 
@@ -62,7 +62,7 @@ figure(3)
 bodemag(Wn11,'r-',Wn22,'b--',{10^(-1) 10^4})
 grid
 title('Sensor noise weight')
-legend('Wn11','Wn22',4)
+legend('Wn11','Wn22')
 %
 % control action weights
 nuWu = [1.2    1];    % 

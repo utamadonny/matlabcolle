@@ -305,4 +305,4 @@ legend('\mu-upper bound','\mu-lower bound')
 %% REFERENCE
 %[1]D. W. Gu, P. H. Petkov, dan M. M. Konstantinov, “Robust control design with MATLAB®,” in Advanced Textbooks in Control and Signal Processing, 2013.
 %[2]Yamamoto, Y.: NXTway-GS (Self-Balancing Two-Wheeled Robot) controller design).
-% http://www.mathworks.com/matlabcentral/fileexchange/19147-nxtway-gs-self-balancingtwo-wheeled-robot-controller-design
+<http://www.mathworks.com http://www.mathworks.com/matlabcentral/fileexchange/19147-nxtway-gs-self-balancingtwo-wheeled-robot-controller-design>
