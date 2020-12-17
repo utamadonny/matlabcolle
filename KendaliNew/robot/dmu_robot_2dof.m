@@ -21,7 +21,7 @@ grid
 title('Robust stability')
 xlabel('Frequency (rad/sec)')
 ylabel('mu')
-legend('\mu-upper bound','\mu-lower bound',3)
+legend('\mu-upper bound','\mu-lower bound')
 %
 % nominal performance
 figure(2)
@@ -42,4 +42,4 @@ grid
 xlabel('Frequency (rad/sec)')
 ylabel('mu')
 title('Robust performance')
-legend('\mu-upper bound','\mu-lower bound',3)
+legend('\mu-upper bound','\mu-lower bound')

@@ -10,7 +10,7 @@ figure(1)
 olp_ic30 = usample(olp_ic,30);
 bode(olp_ic.NominalValue,'r-',olp_ic30,'b--',w), grid
 title('Bode plot of the uncertain plant')
-legend('Nominal system','Random samples',3)
+legend('Nominal system','Random samples')
 %
 % construct performance weighting function
 wts_hdd

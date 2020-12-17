@@ -384,8 +384,7 @@ get(K_hin)
 disp(' ')
 disp('Closed-loop poles')
 sp = pole(dclp_hin)
-% omega = logspace(-2,6,100);
-omega = logspace(-3,log10(pi/Ts),500);
+omega = logspace(-2,6,100);
 sigma(clp_hin,omega)
 title('Singular Value Plot of clp')
 xlabel('Frequency (rad/sec)')
@@ -573,7 +572,7 @@ ylabel('mu')
 title('Robust performance')
 legend('\mu-upper bound','\mu-lower bound')
 
-%% Compare Controller H-inf and $\mu$-syns
+%%
 % omega = logspace(-2,6,100);
 % sigma(clp_hin,omega)
 % omega = logspace(-3,log10(pi/Ts),200);
@@ -583,12 +582,12 @@ sigma(Kd,'r-',K_hin,'b-',omega), grid
 axis([10^(-4) pi/Ts -50 100])
 title('Singular value plot of the controller')
 legend('\mu-systhesis','H-Infinity')
-%% ????
+%%
 ref_loop = clp(1,1);
 ref_hin =clp_hin(1,1);
 omega = logspace(-3,log10(pi/Ts),500);
 figure(1)
-sigma(ref_loop,'r-',ref_hin,'y-',omega), grid
+sigma(ref_loop,'r-',omega), grid
 xlabel('Frequency (rad/sec')
 ylabel('Singular values (dB)')
 axis([10^(-3) 10^1 -10 10])

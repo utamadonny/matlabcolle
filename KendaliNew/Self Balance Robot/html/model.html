@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Two Wheeled Inverse Pendulum - Self Balancing Robot</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-15"><meta name="DC.source" content="model.m"><style type="text/css">
+      --><title>Two Wheeled Inverse Pendulum - Self Balancing Robot</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-12-17"><meta name="DC.source" content="model.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -67,7 +67,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Two Wheeled Inverse Pendulum - Self Balancing Robot</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Robot NXT</b></a></li><li><a href="#2"><b>Model</b></a></li><li><a href="#3"><b>Parameter in Matlab</b></a></li><li><a href="#4">Uncertainty of friction</a></li><li><a href="#5">DC Motor Parameters</a></li><li><a href="#6"><b>State-Space Matrix Certain Model</b></a></li><li><a href="#7">Uncertain SS</a></li><li><a href="#8"><b>Check Observability and Controllability</b></a></li><li><a href="#9"><b>Singular Value Plot</b></a></li><li><a href="#10">Note DESAIN KONTROL</a></li><li><a href="#11">Test Weight</a></li><li><a href="#12"><b>Performance Weighting Func</b></a></li><li><a href="#13"><b>Noise shaping filters</b></a></li><li><a href="#14"><b>Control action weights</b></a></li><li><a href="#15">open-loop connection with the weighting functions</a></li><li><a href="#16">Generates the open-loop connection for the Two-Wheeled Robot Control Plant 1</a></li><li><a href="#17">Frequency responses of the Two-Wheeled Robot Control System (Part 1)</a></li><li><a href="#18">* <img src="model_eq05371638286043275527.png" alt="$\mu$">-Synthesis and <img src="model_eq05371638286043275527.png" alt="$\mu$">-Analysis*</a></li><li><a href="#19">Opsi 1 <img src="model_eq05371638286043275527.png" alt="$\mu$">-Synthesis dengan musyn</a></li><li><a href="#20">Opsi 2 <img src="model_eq05371638286043275527.png" alt="$\mu$">-Synthesis dengan dksyn</a></li><li><a href="#21">Frequency responses of the Two-Wheeled Robot Control System (Part 2)</a></li><li><a href="#22"><b>Mu analysis of the Two-Wheeled Robot Control System</b></a></li><li><a href="#23">robust stability analysis</a></li><li><a href="#24">nominal performance</a></li><li><a href="#25">robust performance Plant 1</a></li><li><a href="#26">REFERENCE</a></li></ul></div><h2 id="1"><b>Robot NXT</b></h2><p><img vspace="5" hspace="5" src="1.png" alt=""> </p><h2 id="2"><b>Model</b></h2><p><img vspace="5" hspace="5" src="2.png" alt=""> </p><p><img vspace="5" hspace="5" src="3.png" alt=""> </p><h2 id="3"><b>Parameter in Matlab</b></h2><p><img vspace="5" hspace="5" src="4.png" alt=""> </p><pre class="codeinput">g = 9.81;						<span class="comment">% gravitasi [m/sec^2]</span>
+  </style></head><body><div class="content"><h1>Two Wheeled Inverse Pendulum - Self Balancing Robot</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1"><b>Robot NXT</b></a></li><li><a href="#2"><b>Model</b></a></li><li><a href="#3"><b>Parameter in Matlab</b></a></li><li><a href="#4">Uncertainty of friction</a></li><li><a href="#5">DC Motor Parameters</a></li><li><a href="#6"><b>State-Space Matrix Certain Model</b></a></li><li><a href="#7">Uncertain SS</a></li><li><a href="#8"><b>Check Observability and Controllability</b></a></li><li><a href="#9"><b>Singular Value Plot</b></a></li><li><a href="#10">Note DESAIN KONTROL</a></li><li><a href="#11">Test Weight</a></li><li><a href="#12"><b>Performance Weighting Func</b></a></li><li><a href="#13"><b>Noise shaping filters</b></a></li><li><a href="#14"><b>Control action weights</b></a></li><li><a href="#15">open-loop connection with the weighting functions</a></li><li><a href="#16">Generates the open-loop connection for the Two-Wheeled Robot Control Plant 1</a></li><li><a href="#17">Frequency responses of the Two-Wheeled Robot Control System (Part 1)</a></li><li><a href="#18">* <img src="model_eq05371638286043275527.png" alt="$\mu$">-Synthesis and <img src="model_eq05371638286043275527.png" alt="$\mu$">-Analysis*</a></li><li><a href="#19">Opsi 1 <img src="model_eq05371638286043275527.png" alt="$\mu$">-Synthesis dengan musyn</a></li><li><a href="#20">Opsi 2 <img src="model_eq05371638286043275527.png" alt="$\mu$">-Synthesis dengan dksyn</a></li><li><a href="#21">H- Infinity [ TEST | Not Finished ]</a></li><li><a href="#22">Frequency responses of the Two-Wheeled Robot Control System (Part 2)</a></li><li><a href="#23"><b>Mu analysis of the Two-Wheeled Robot Control System</b></a></li><li><a href="#24">robust stability analysis</a></li><li><a href="#25">nominal performance</a></li><li><a href="#26">robust performance Plant 1</a></li><li><a href="#27">Compare Controller H-inf and <img src="model_eq05371638286043275527.png" alt="$\mu$">-syns</a></li><li><a href="#28">????</a></li><li><a href="#29">REFERENCE</a></li></ul></div><h2 id="1"><b>Robot NXT</b></h2><p><img vspace="5" hspace="5" src="1.png" alt=""> </p><h2 id="2"><b>Model</b></h2><p><img vspace="5" hspace="5" src="2.png" alt=""> </p><p><img vspace="5" hspace="5" src="3.png" alt=""> </p><h2 id="3"><b>Parameter in Matlab</b></h2><p><img vspace="5" hspace="5" src="4.png" alt=""> </p><pre class="codeinput">g = 9.81;						<span class="comment">% gravitasi [m/sec^2]</span>
 m = 0.03;						<span class="comment">% wheel weight [kg]</span>
 R = 0.04;						<span class="comment">% wheel radius [m]</span>
 Jw = m * R^2 / 2;				<span class="comment">% wheel inertia moment [kgm^2]</span>
@@ -462,13 +462,7 @@ opt =
        AutoIterSmartTerminate: 'on'
     AutoIterSmartTerminateTol: 0.0050
 
-Warning:
-DKSYN
-is
-obsolete.
-Please
-use
-MUSYN
+Warning: DKSYN is obsolete. Please use MUSYN
 instead. 
  
  
@@ -643,13 +637,7 @@ opt2 =
        AutoIterSmartTerminate: 'on'
     AutoIterSmartTerminateTol: 0.0050
 
-Warning:
-DKSYN
-is
-obsolete.
-Please
-use
-MUSYN
+Warning: DKSYN is obsolete. Please use MUSYN
 instead. 
  
  
@@ -813,7 +801,90 @@ Gamma Acheived         32.466     9.649     2.309     1.427     1.185
 Peak mu-Value          27.822     9.625     2.307     1.427     1.185
  
  Next MU iteration number:  6
-</pre><img vspace="5" hspace="5" src="model_11.png" alt=""> <img vspace="5" hspace="5" src="model_12.png" alt=""> <h2 id="21">Frequency responses of the Two-Wheeled Robot Control System (Part 2)</h2><pre class="codeinput">Ts = 4.0*10^(-3);
+</pre><img vspace="5" hspace="5" src="model_11.png" alt=""> <img vspace="5" hspace="5" src="model_12.png" alt=""> <h2 id="21">H- Infinity [ TEST | Not Finished ]</h2><pre class="codeinput">nmeas3 = 9;
+ncon3 = 2;
+gmin = 0;
+gmax = 10;
+<span class="comment">% tol = 0.001;</span>
+[hin_ic,Delta4] = lftdata(sys_ic);
+<span class="comment">% hin_ic = sys_ic.Nom;</span>
+[K_hin,dclp_hin,gopt] = hinfsyn(hin_ic,nmeas3,ncon3,[gmin,gmax]);
+gmin = 1.1*gopt;
+[K_hin,dclp_hin,gfin] = hinfsyn(hin_ic,nmeas3,ncon3,[gmin,gmin]);
+disp(<span class="string">' '</span>)
+get(K_hin)
+disp(<span class="string">' '</span>)
+disp(<span class="string">'Closed-loop poles'</span>)
+sp = pole(dclp_hin)
+<span class="comment">% omega = logspace(-2,6,100);</span>
+omega = logspace(-3,log10(pi/Ts),500);
+sigma(clp_hin,omega)
+title(<span class="string">'Singular Value Plot of clp'</span>)
+xlabel(<span class="string">'Frequency (rad/sec)'</span>)
+ylabel(<span class="string">'Magnitude'</span>)
+<span class="comment">% Ts = 4.0*10^(-3);</span>
+<span class="comment">% M_d4 = c2d(hin_ic,Ts);</span>
+<span class="comment">% dclp_hin2 = lft(Delta4,M_d4);</span>
+<span class="comment">% clp_hin = lft(dclp_hin2,K_hin);</span>
+<span class="comment">% K = K_hin;</span>
+</pre><pre class="codeoutput"> 
+                A: [12&times;12 double]
+                B: [12&times;9 double]
+                C: [2&times;12 double]
+                D: [2&times;9 double]
+                E: []
+           Scaled: 0
+        StateName: {12&times;1 cell}
+        StateUnit: {12&times;1 cell}
+    InternalDelay: [0&times;1 double]
+       InputDelay: [9&times;1 double]
+      OutputDelay: [2&times;1 double]
+               Ts: 0
+         TimeUnit: 'seconds'
+        InputName: {9&times;1 cell}
+        InputUnit: {9&times;1 cell}
+       InputGroup: [1&times;1 struct]
+       OutputName: {2&times;1 cell}
+       OutputUnit: {2&times;1 cell}
+      OutputGroup: [1&times;1 struct]
+            Notes: [0&times;1 string]
+         UserData: []
+             Name: ''
+     SamplingGrid: [1&times;1 struct]
+
+ 
+Closed-loop poles
+
+sp =
+
+   1.0e+03 *
+
+  -0.0000 + 0.0000i
+  -0.0010 + 0.0000i
+  -0.0000 + 0.0000i
+  -0.4167 + 0.0000i
+  -0.4167 + 0.0000i
+  -0.9429 + 0.0000i
+  -0.9147 + 0.0000i
+  -0.2277 + 0.0000i
+  -0.2416 + 0.0000i
+  -0.0964 + 0.0000i
+  -0.0320 + 0.0000i
+  -0.0100 + 0.0000i
+  -0.0064 + 0.0023i
+  -0.0064 - 0.0023i
+  -0.0070 + 0.0000i
+  -0.0061 + 0.0000i
+  -0.0042 + 0.0000i
+  -0.0000 + 0.0000i
+  -0.0004 + 0.0004i
+  -0.0004 - 0.0004i
+  -0.0010 + 0.0000i
+  -0.0008 + 0.0000i
+  -1.0000 + 0.0000i
+  -1.0000 + 0.0000i
+
+</pre><img vspace="5" hspace="5" src="model_13.png" alt=""> <h2 id="22">Frequency responses of the Two-Wheeled Robot Control System (Part 2)</h2><pre class="codeinput">Ts = 4.0*10^(-3);
 <span class="comment">% buat LFT</span>
 [M3,Delta3,blkstruct3] = lftdata(clp_ic);
 M_d3 = c2d(M3,Ts);
@@ -902,17 +973,18 @@ figure(8)
 sigma(L,<span class="string">'r-'</span>,omega), grid
 axis([10^(-5) pi/Ts -50 150])
 title(<span class="string">'Singular value plot of the open-loop system'</span>)
-</pre><img vspace="5" hspace="5" src="model_13.png" alt=""> <img vspace="5" hspace="5" src="model_14.png" alt=""> <img vspace="5" hspace="5" src="model_15.png" alt=""> <img vspace="5" hspace="5" src="model_16.png" alt=""> <img vspace="5" hspace="5" src="model_17.png" alt=""> <img vspace="5" hspace="5" src="model_18.png" alt=""> <img vspace="5" hspace="5" src="model_19.png" alt=""> <img vspace="5" hspace="5" src="model_20.png" alt=""> <h2 id="22"><b>Mu analysis of the Two-Wheeled Robot Control System</b></h2><p><b>closed-loop system</b></p><pre class="codeinput"><span class="comment">%&lt;&lt;5.PNG&gt;&gt;</span>
+</pre><img vspace="5" hspace="5" src="model_14.png" alt=""> <img vspace="5" hspace="5" src="model_15.png" alt=""> <img vspace="5" hspace="5" src="model_16.png" alt=""> <img vspace="5" hspace="5" src="model_17.png" alt=""> <img vspace="5" hspace="5" src="model_18.png" alt=""> <img vspace="5" hspace="5" src="model_19.png" alt=""> <img vspace="5" hspace="5" src="model_20.png" alt=""> <img vspace="5" hspace="5" src="model_21.png" alt=""> <h2 id="23"><b>Mu analysis of the Two-Wheeled Robot Control System</b></h2><p><b>closed-loop system</b></p><pre class="codeinput"><span class="comment">%&lt;&lt;5.PNG&gt;&gt;</span>
 <span class="comment">%</span>
 <span class="comment">% Plant 1</span>
 Ts = 4.0*10^(-3);
 omega = logspace(-3,log10(pi/Ts),200);
+<span class="comment">% omega = logspace(-4,log10(pi/Ts),500);</span>
 dclp_ic = lft(dsys_ic,Kd,2,9);
 dclp_g = ufrd(dclp_ic,omega);
 <span class="comment">% Plant 2</span>
 dclp_ic2 = lft(dsys_ic2,Kd2,2,4);
 dclp_g2 = ufrd(dclp_ic2,omega);
-</pre><h2 id="23">robust stability analysis</h2><pre class="codeinput"><span class="comment">%Plant 1</span>
+</pre><h2 id="24">robust stability analysis</h2><pre class="codeinput"><span class="comment">%Plant 1</span>
 figure(1)
 opt = robopt(<span class="string">'Display'</span>,<span class="string">'on'</span>);
 [stabmarg,destabu,report,info] = robuststab(dclp_g,opt);
@@ -969,7 +1041,7 @@ report2 =
     '      100% for fm. Increasing fm by 25% decreases the margin by 25%.                                 '
     '      19% for fw. Increasing fw by 25% decreases the margin by 4.75%.                                '
 
-</pre><img vspace="5" hspace="5" src="model_21.png" alt=""> <img vspace="5" hspace="5" src="model_22.png" alt=""> <h2 id="24">nominal performance</h2><p>Plant 1</p><pre class="codeinput">Ts = 4.0*10^(-3);
+</pre><img vspace="5" hspace="5" src="model_22.png" alt=""> <img vspace="5" hspace="5" src="model_23.png" alt=""> <h2 id="25">nominal performance</h2><p>Plant 1</p><pre class="codeinput">Ts = 4.0*10^(-3);
 omega = logspace(-3,log10(pi/Ts),200);
 figure(1)
 sv = sigma(dclp_ic.Nominal,omega);
@@ -989,7 +1061,7 @@ semilogx(sys2,<span class="string">'r-'</span>)
 grid
 xlabel(<span class="string">'Frequency (rad/sec)'</span>)
 title(<span class="string">'Nominal performance'</span>)
-</pre><img vspace="5" hspace="5" src="model_23.png" alt=""> <img vspace="5" hspace="5" src="model_24.png" alt=""> <h2 id="25">robust performance Plant 1</h2><p>plant 1</p><pre class="codeinput">figure(1)
+</pre><img vspace="5" hspace="5" src="model_24.png" alt=""> <img vspace="5" hspace="5" src="model_25.png" alt=""> <h2 id="26">robust performance Plant 1</h2><p>plant 1</p><pre class="codeinput">figure(1)
 opt = robopt(<span class="string">'Display'</span>,<span class="string">'on'</span>);
 [perfmarg,perfmargunc,report,info] = robustperf(dclp_g,opt);
 report
@@ -1043,7 +1115,21 @@ report2 =
     '      0% for fm. Increasing fm by 25% decreases the margin by 0%.                                                '
     '      0% for fw. Increasing fw by 25% decreases the margin by 0%.                                                '
 
-</pre><img vspace="5" hspace="5" src="model_25.png" alt=""> <img vspace="5" hspace="5" src="model_26.png" alt=""> <h2 id="26">REFERENCE</h2><pre class="codeinput"><span class="comment">%[1]D. W. Gu, P. H. Petkov, dan M. M. Konstantinov, &#8220;Robust control design with MATLAB&reg;,&#8221; in Advanced Textbooks in Control and Signal Processing, 2013.</span>
+</pre><img vspace="5" hspace="5" src="model_26.png" alt=""> <img vspace="5" hspace="5" src="model_27.png" alt=""> <h2 id="27">Compare Controller H-inf and <img src="model_eq05371638286043275527.png" alt="$\mu$">-syns</h2><p>omega = logspace(-2,6,100); sigma(clp_hin,omega) omega = logspace(-3,log10(pi/Ts),200); sigma(dclp2,'r-',omega), grid</p><pre class="codeinput">omega = logspace(-4,log10(pi/Ts),500);
+sigma(Kd,<span class="string">'r-'</span>,K_hin,<span class="string">'b-'</span>,omega), grid
+axis([10^(-4) pi/Ts -50 100])
+title(<span class="string">'Singular value plot of the controller'</span>)
+legend(<span class="string">'\mu-systhesis'</span>,<span class="string">'H-Infinity'</span>)
+</pre><img vspace="5" hspace="5" src="model_28.png" alt=""> <h2 id="28">????</h2><pre class="codeinput">ref_loop = clp(1,1);
+ref_hin =clp_hin(1,1);
+omega = logspace(-3,log10(pi/Ts),500);
+figure(1)
+sigma(ref_loop,<span class="string">'r-'</span>,ref_hin,<span class="string">'y-'</span>,omega), grid
+xlabel(<span class="string">'Frequency (rad/sec'</span>)
+ylabel(<span class="string">'Singular values (dB)'</span>)
+axis([10^(-3) 10^1 -10 10])
+title(<span class="string">'Singular value plot of the closed-loop system \Theta(z)/r(z)'</span>)
+</pre><img vspace="5" hspace="5" src="model_29.png" alt=""> <h2 id="29">REFERENCE</h2><pre class="codeinput"><span class="comment">%[1]D. W. Gu, P. H. Petkov, dan M. M. Konstantinov, &#8220;Robust control design with MATLAB&reg;,&#8221; in Advanced Textbooks in Control and Signal Processing, 2013.</span>
 <span class="comment">%[2]Yamamoto, Y.: NXTway-GS (Self-Balancing Two-Wheeled Robot) controller design).</span>
 <span class="comment">% http://www.mathworks.com/matlabcentral/fileexchange/19147-nxtway-gs-self-balancingtwo-wheeled-robot-controller-design</span>
 </pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
@@ -1418,7 +1504,33 @@ sigma(dclp2,'r-',omega), grid
 axis([10^(-3) 10^1 -10 10])
 title('Full cost')
 [A_h2,B_h2,C_h2,D_h2] = ssdata(Kd2);
-
+%% H- Infinity [ TEST | Not Finished ]
+nmeas3 = 9;
+ncon3 = 2;
+gmin = 0;
+gmax = 10;
+% tol = 0.001;
+[hin_ic,Delta4] = lftdata(sys_ic);
+% hin_ic = sys_ic.Nom;
+[K_hin,dclp_hin,gopt] = hinfsyn(hin_ic,nmeas3,ncon3,[gmin,gmax]);
+gmin = 1.1*gopt;
+[K_hin,dclp_hin,gfin] = hinfsyn(hin_ic,nmeas3,ncon3,[gmin,gmin]);
+disp(' ')
+get(K_hin)
+disp(' ')
+disp('Closed-loop poles')
+sp = pole(dclp_hin)
+% omega = logspace(-2,6,100);
+omega = logspace(-3,log10(pi/Ts),500);
+sigma(clp_hin,omega)
+title('Singular Value Plot of clp')
+xlabel('Frequency (rad/sec)')
+ylabel('Magnitude')
+% Ts = 4.0*10^(-3);
+% M_d4 = c2d(hin_ic,Ts);
+% dclp_hin2 = lft(Delta4,M_d4);
+% clp_hin = lft(dclp_hin2,K_hin);
+% K = K_hin;
 %% Frequency responses of the Two-Wheeled Robot Control System (Part 2)
 Ts = 4.0*10^(-3);
 % buat LFT
@@ -1427,7 +1539,7 @@ M_d3 = c2d(M3,Ts);
 % close loop
 dclp_ic3 = lft(Delta3,M_d3);
 clp = lft(dclp_ic3,Kd);
-%
+% 
 dWp = c2d(Wp,Ts);
 dWn = c2d(Wn,Ts);
 dWu = c2d(Wu,Ts);
@@ -1518,6 +1630,7 @@ title('Singular value plot of the open-loop system')
 % Plant 1
 Ts = 4.0*10^(-3);
 omega = logspace(-3,log10(pi/Ts),200);
+% omega = logspace(-4,log10(pi/Ts),500);
 dclp_ic = lft(dsys_ic,Kd,2,9);
 dclp_g = ufrd(dclp_ic,omega);
 % Plant 2
@@ -1595,6 +1708,27 @@ xlabel('Frequency (rad/sec)')
 ylabel('mu')
 title('Robust performance')
 legend('\mu-upper bound','\mu-lower bound')
+
+%% Compare Controller H-inf and $\mu$-syns
+% omega = logspace(-2,6,100);
+% sigma(clp_hin,omega)
+% omega = logspace(-3,log10(pi/Ts),200);
+% sigma(dclp2,'r-',omega), grid
+omega = logspace(-4,log10(pi/Ts),500);
+sigma(Kd,'r-',K_hin,'b-',omega), grid
+axis([10^(-4) pi/Ts -50 100])
+title('Singular value plot of the controller')
+legend('\mu-systhesis','H-Infinity')
+%% ????
+ref_loop = clp(1,1);
+ref_hin =clp_hin(1,1);
+omega = logspace(-3,log10(pi/Ts),500);
+figure(1)
+sigma(ref_loop,'r-',ref_hin,'y-',omega), grid
+xlabel('Frequency (rad/sec')
+ylabel('Singular values (dB)')
+axis([10^(-3) 10^1 -10 10])
+title('Singular value plot of the closed-loop system \Theta(z)/r(z)')
 
 %% REFERENCE
 %[1]D. W. Gu, P. H. Petkov, dan M. M. Konstantinov, “Robust control design with MATLAB®,” in Advanced Textbooks in Control and Signal Processing, 2013.

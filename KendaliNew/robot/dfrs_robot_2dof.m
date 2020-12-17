@@ -42,7 +42,7 @@ sigma(sen_loop,'b-',inv(dWp(1,1)),'r--',omega), grid
 %xlabel('Frequency (rad/sec')
 %ylabel('Singular values (dB)')
 title('Singular value plot of the output sensitivity e_\Theta(z)/r(z)')
-legend('Output sensitivity','Inverse performance weighting function',4)
+legend('Output sensitivity','Inverse performance weighting function')
 %
 % singular values of the integral component
 sen_loop = clp(11,1);
@@ -50,7 +50,7 @@ omega = logspace(-4,log10(pi/Ts),500);
 figure(3)
 sigma(sen_loop,'b-',inv(dWp(5,5)),'r--',omega), grid
 title('Singular value plot of the integral error Int(e_\Theta)(z)/r(z)')
-legend('Integral error','Inverse performance weighting function',3)
+legend('Integral error','Inverse performance weighting function')
 %
 % sensitivity of control action to reference
 cont_loop = clp([5:6],[1:4]);
@@ -59,7 +59,7 @@ figure(4)
 sigma(cont_loop,'b-',inv(dWu),'r--',omega), grid
 axis([10^(-4) pi/Ts -150 100])
 title('Sensitivity of control to references')
-legend('Control action','Inverse control weighting function',3)
+legend('Control action','Inverse control weighting function')
 %
 % sensitivity of control action to noises
 cont_loop = clp([5:6],[5:6]);
@@ -69,7 +69,7 @@ sigma(cont_loop,'b-',inv(dWu),'r--',omega), grid
 axis([10^(-4) pi/Ts -300 100])
 title('Sensitivity of control to noises')
 legend('Control action due to noises', ...
-       'Inverse control weighting function',4)
+       'Inverse control weighting function')
 %
 % sensitivity of control action to reference and noise
 cont_loop = clp([5:6],[1:6]);
@@ -79,7 +79,7 @@ sigma(cont_loop,'b-',inv(dWu),'r--',omega), grid
 axis([10^(-4) pi/Ts -150 100])
 title('Sensitivity of control to references and noises')
 legend('Control action due to references and noises', ...
-       'Inverse control weighting function',3)
+       'Inverse control weighting function')
 %
 % controller frequency responses
 omega = logspace(-4,log10(pi/Ts),500);
